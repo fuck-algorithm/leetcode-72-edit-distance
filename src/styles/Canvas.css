@@ -1,0 +1,212 @@
+.canvas-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+}
+
+.canvas-svg {
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.canvas-svg:active {
+  cursor: grabbing;
+}
+
+/* DP表格样式 */
+.dp-table-group {
+  transition: transform 0.3s ease;
+}
+
+.dp-cell {
+  stroke: var(--border-color);
+  stroke-width: 1;
+  transition: fill 0.3s ease;
+}
+
+.dp-cell.header {
+  fill: var(--cell-header);
+}
+
+.dp-cell.default {
+  fill: var(--cell-default);
+}
+
+.dp-cell.current {
+  fill: var(--cell-current);
+  stroke: var(--accent-color);
+  stroke-width: 2;
+}
+
+.dp-cell.compare {
+  fill: var(--cell-compare);
+}
+
+.dp-cell.result {
+  fill: var(--cell-result);
+  stroke: var(--success-color);
+  stroke-width: 2;
+}
+
+.dp-cell-text {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  fill: var(--text-primary);
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+
+.dp-header-text {
+  font-family: var(--font-family);
+  font-size: 12px;
+  fill: var(--text-secondary);
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+}
+
+/* 箭头样式 */
+.arrow-line {
+  stroke: var(--primary-color);
+  stroke-width: 2;
+  fill: none;
+  marker-end: url(#arrowhead);
+}
+
+.arrow-label {
+  font-family: var(--font-family);
+  font-size: 11px;
+  fill: var(--text-primary);
+  text-anchor: middle;
+  background: white;
+}
+
+.arrow-label-bg {
+  fill: white;
+  stroke: var(--border-color);
+  stroke-width: 1;
+  rx: 3;
+}
+
+/* 操作标签 */
+.operation-label {
+  font-family: var(--font-family);
+  font-size: 12px;
+  font-weight: 500;
+  text-anchor: middle;
+}
+
+.operation-label.insert {
+  fill: var(--op-insert);
+}
+
+.operation-label.delete {
+  fill: var(--op-delete);
+}
+
+.operation-label.replace {
+  fill: var(--op-replace);
+}
+
+.operation-label.match {
+  fill: var(--op-match);
+}
+
+/* 步骤描述 */
+.step-description {
+  position: absolute;
+  bottom: var(--spacing-md);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-md);
+  max-width: 80%;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-primary);
+  z-index: 10;
+}
+
+/* 缩放控制 */
+.zoom-controls {
+  position: absolute;
+  bottom: var(--spacing-md);
+  right: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  z-index: 10;
+}
+
+.zoom-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.zoom-btn:hover {
+  background: var(--primary-color);
+  color: var(--text-light);
+  border-color: var(--primary-color);
+}
+
+/* 图例 */
+.legend {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  background: rgba(255, 255, 255, 0.95);
+  padding: var(--spacing-sm);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  z-index: 10;
+}
+
+.legend-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: 1px solid var(--border-color);
+}
+
+.legend-color.current {
+  background: var(--cell-current);
+}
+
+.legend-color.compare {
+  background: var(--cell-compare);
+}
+
+.legend-color.result {
+  background: var(--cell-result);
+}

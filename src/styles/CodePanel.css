@@ -1,0 +1,136 @@
+.code-panel {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-primary);
+}
+
+.language-tabs {
+  display: flex;
+  gap: 2px;
+}
+
+.language-tab {
+  padding: 4px 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: var(--transition-fast);
+}
+
+.language-tab:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.language-tab.active {
+  background: var(--primary-color);
+  color: var(--text-light);
+}
+
+.code-container {
+  flex: 1;
+  overflow: auto;
+  padding: var(--spacing-sm);
+  background: #1e1e1e;
+}
+
+.code-content {
+  display: flex;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.line-numbers {
+  display: flex;
+  flex-direction: column;
+  padding-right: var(--spacing-sm);
+  border-right: 1px solid #333;
+  margin-right: var(--spacing-sm);
+  color: #858585;
+  user-select: none;
+  text-align: right;
+  min-width: 30px;
+}
+
+.line-number {
+  height: 19.2px;
+}
+
+.code-lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.code-line {
+  display: flex;
+  align-items: center;
+  height: 19.2px;
+  padding: 0 var(--spacing-xs);
+  border-radius: 2px;
+  transition: var(--transition-fast);
+}
+
+.code-line.highlighted {
+  background: rgba(255, 235, 59, 0.2);
+}
+
+.code-line-text {
+  color: #d4d4d4;
+  white-space: pre;
+}
+
+.variable-value {
+  margin-left: var(--spacing-md);
+  padding: 1px 6px;
+  background: rgba(76, 175, 80, 0.2);
+  border-radius: 3px;
+  color: #4CAF50;
+  font-size: 11px;
+}
+
+/* 语法高亮 */
+.code-line-text .keyword {
+  color: #569cd6;
+}
+
+.code-line-text .string {
+  color: #ce9178;
+}
+
+.code-line-text .number {
+  color: #b5cea8;
+}
+
+.code-line-text .comment {
+  color: #6a9955;
+}
+
+.code-line-text .function {
+  color: #dcdcaa;
+}
+
+.code-line-text .type {
+  color: #4ec9b0;
+}
+
+.code-line-text .operator {
+  color: #d4d4d4;
+}

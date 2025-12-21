@@ -1,0 +1,64 @@
+:root {
+  /* 主色调 - 蓝绿色系 */
+  --primary-color: #2196F3;
+  --primary-light: #64B5F6;
+  --primary-dark: #1976D2;
+  
+  /* 辅助色 */
+  --secondary-color: #00BCD4;
+  --accent-color: #FF9800;
+  
+  /* 背景色 */
+  --bg-primary: #f5f7fa;
+  --bg-secondary: #ffffff;
+  --bg-dark: #1e2a38;
+  
+  /* 文字色 */
+  --text-primary: #2c3e50;
+  --text-secondary: #7f8c8d;
+  --text-light: #ffffff;
+  
+  /* 状态色 */
+  --success-color: #4CAF50;
+  --warning-color: #FF9800;
+  --error-color: #f44336;
+  --info-color: #2196F3;
+  
+  /* DP表格颜色 */
+  --cell-default: #ffffff;
+  --cell-current: #FFE082;
+  --cell-compare: #B3E5FC;
+  --cell-result: #A5D6A7;
+  --cell-header: #E3F2FD;
+  
+  /* 操作颜色 */
+  --op-insert: #81C784;
+  --op-delete: #E57373;
+  --op-replace: #FFB74D;
+  --op-match: #64B5F6;
+  
+  /* 边框 */
+  --border-color: #e0e0e0;
+  --border-radius: 8px;
+  
+  /* 阴影 */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+  
+  /* 间距 */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  /* 字体 */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Fira Code', 'Monaco', 'Consolas', monospace;
+  
+  /* 动画 */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+}
