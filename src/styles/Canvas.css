@@ -44,6 +44,12 @@
   fill: var(--cell-compare);
 }
 
+.dp-cell.selected {
+  fill: #FFD54F;
+  stroke: #FF9800;
+  stroke-width: 2;
+}
+
 .dp-cell.result {
   fill: var(--cell-result);
   stroke: var(--success-color);
@@ -59,13 +65,44 @@
   pointer-events: none;
 }
 
+.dp-cell-text.result {
+  font-weight: 600;
+}
+
 .dp-header-text {
   font-family: var(--font-family);
-  font-size: 12px;
+  font-size: 14px;
   fill: var(--text-secondary);
   text-anchor: middle;
   dominant-baseline: middle;
   pointer-events: none;
+}
+
+.dp-header-text.empty-string {
+  font-style: italic;
+  fill: #999;
+}
+
+.dp-header-text.highlighted {
+  fill: var(--primary-color);
+  font-weight: 600;
+  font-size: 16px;
+}
+
+/* 方向标签 */
+.direction-label {
+  font-size: 10px;
+  fill: #666;
+  text-anchor: start;
+  dominant-baseline: hanging;
+}
+
+/* 选中标记 */
+.selected-mark {
+  font-size: 12px;
+  fill: #4CAF50;
+  text-anchor: end;
+  dominant-baseline: hanging;
 }
 
 /* 箭头样式 */
@@ -76,26 +113,39 @@
   marker-end: url(#arrowhead);
 }
 
+.arrow-line.match {
+  stroke: #4CAF50;
+  marker-end: url(#arrowhead-match);
+}
+
 .arrow-label {
   font-family: var(--font-family);
   font-size: 11px;
   fill: var(--text-primary);
   text-anchor: middle;
-  background: white;
+  font-weight: 500;
+}
+
+.arrow-label.match {
+  fill: #2E7D32;
 }
 
 .arrow-label-bg {
   fill: white;
-  stroke: var(--border-color);
+  stroke: var(--primary-color);
   stroke-width: 1;
-  rx: 3;
+}
+
+.arrow-label-bg.match {
+  stroke: #4CAF50;
+  fill: #E8F5E9;
 }
 
 /* 操作标签 */
 .operation-label {
   font-family: var(--font-family);
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
   text-anchor: middle;
 }
 
@@ -115,21 +165,128 @@
   fill: var(--op-match);
 }
 
-/* 步骤描述 */
-.step-description {
+/* 步骤信息面板 */
+.step-info-panel {
   position: absolute;
   bottom: var(--spacing-md);
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.98);
   padding: var(--spacing-sm) var(--spacing-md);
+  padding-top: calc(var(--spacing-sm) + 16px);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-md);
-  max-width: 80%;
-  text-align: center;
+  max-width: 500px;
+  min-width: 300px;
+  z-index: 10;
+  cursor: move;
+  user-select: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.step-info-panel:hover {
+  box-shadow: var(--shadow-lg, 0 8px 24px rgba(0, 0, 0, 0.15));
+}
+
+.step-info-panel.dragging {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  opacity: 0.95;
+}
+
+.panel-drag-hint {
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: #999;
+  letter-spacing: 2px;
+  cursor: move;
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
+}
+
+.step-number {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.operation-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.operation-badge.insert {
+  background: #E3F2FD;
+  color: #1565C0;
+}
+
+.operation-badge.delete {
+  background: #FFEBEE;
+  color: #C62828;
+}
+
+.operation-badge.replace {
+  background: #FFF3E0;
+  color: #E65100;
+}
+
+.operation-badge.match {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.operation-badge.init {
+  background: #F3E5F5;
+  color: #7B1FA2;
+}
+
+.step-description {
   font-size: 14px;
   color: var(--text-primary);
-  z-index: 10;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: pre-line;
+}
+
+.step-detail {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: var(--spacing-xs);
+  padding-top: var(--spacing-xs);
+  border-top: 1px solid var(--border-color);
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.operation-choices {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-xs);
+  padding-top: var(--spacing-xs);
+  border-top: 1px solid var(--border-color);
+}
+
+.operation-choices .choice {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #f5f5f5;
+  color: var(--text-secondary);
+}
+
+.operation-choices .choice.selected {
+  background: #FFD54F;
+  color: #333;
+  font-weight: 600;
 }
 
 /* 缩放控制 */
@@ -205,6 +362,11 @@
 
 .legend-color.compare {
   background: var(--cell-compare);
+}
+
+.legend-color.selected {
+  background: #FFD54F;
+  border-color: #FF9800;
 }
 
 .legend-color.result {

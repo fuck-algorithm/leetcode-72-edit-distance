@@ -55,53 +55,42 @@ const InputPanel: React.FC<Props> = ({ word1, word2, onInputChange }) => {
 
   return (
     <div className="input-panel">
-      <div className="input-section">
-        <div className="input-row">
-          <label className="input-label">word1:</label>
-          <input
-            type="text"
-            className={`input-field ${error ? 'error' : ''}`}
-            value={localWord1}
-            onChange={e => setLocalWord1(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="输入第一个单词"
-          />
-        </div>
-        <div className="input-row">
-          <label className="input-label">word2:</label>
-          <input
-            type="text"
-            className={`input-field ${error ? 'error' : ''}`}
-            value={localWord2}
-            onChange={e => setLocalWord2(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="输入第二个单词"
-          />
-        </div>
-        {error && <div className="error-message">{error}</div>}
-        <div className="input-actions">
-          <button className="action-btn primary" onClick={handleApply}>
-            应用
+      <div className="input-inline">
+        <label className="input-label">word1:</label>
+        <input
+          type="text"
+          className={`input-field ${error ? 'error' : ''}`}
+          value={localWord1}
+          onChange={e => setLocalWord1(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="单词1"
+        />
+        <label className="input-label">word2:</label>
+        <input
+          type="text"
+          className={`input-field ${error ? 'error' : ''}`}
+          value={localWord2}
+          onChange={e => setLocalWord2(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="单词2"
+        />
+        <button className="action-btn primary" onClick={handleApply}>
+          应用
+        </button>
+        <button className="action-btn" onClick={handleRandom}>
+          随机
+        </button>
+        <span className="divider">|</span>
+        {examples.map((example, index) => (
+          <button
+            key={index}
+            className="example-btn"
+            onClick={() => handleExample(example)}
+          >
+            {example.name}
           </button>
-          <button className="action-btn" onClick={handleRandom}>
-            随机生成
-          </button>
-        </div>
-      </div>
-
-      <div className="examples-section">
-        <div className="examples-label">示例数据：</div>
-        <div className="examples-list">
-          {examples.map((example, index) => (
-            <button
-              key={index}
-              className="example-btn"
-              onClick={() => handleExample(example)}
-            >
-              {example.name}
-            </button>
-          ))}
-        </div>
+        ))}
+        {error && <span className="error-message">{error}</span>}
       </div>
     </div>
   );

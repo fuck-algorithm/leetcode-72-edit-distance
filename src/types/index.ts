@@ -2,13 +2,15 @@
 export interface AlgorithmStep {
   id: number;
   description: string;
+  // 详细描述（多行）
+  detailDescription?: string;
   // 当前比较的位置
   i: number;
   j: number;
   // DP表格状态
   dpTable: number[][];
   // 高亮的单元格
-  highlightCells: { row: number; col: number; type: 'current' | 'compare' | 'result' }[];
+  highlightCells: { row: number; col: number; type: 'current' | 'compare' | 'result' | 'selected' }[];
   // 操作类型
   operation?: 'insert' | 'delete' | 'replace' | 'match' | 'init';
   // 代码行号映射
@@ -30,6 +32,18 @@ export interface AlgorithmStep {
     to: { row: number; col: number };
     label: string;
   }[];
+  // 字符比较信息
+  comparisonInfo?: {
+    char1: string;
+    char2: string;
+    isMatch: boolean;
+  };
+  // 操作选择信息
+  operationChoices?: {
+    insert: { cost: number; selected: boolean };
+    delete: { cost: number; selected: boolean };
+    replace: { cost: number; selected: boolean };
+  };
 }
 
 // 语言类型

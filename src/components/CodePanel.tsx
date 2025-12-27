@@ -15,46 +15,80 @@ const highlightCode = (code: string, language: Language): React.ReactNode[] => {
   const lines = code.split('\n');
   
   const keywords: Record<Language, string[]> = {
-    java: ['class', 'public', 'int', 'String', 'new', 'for', 'if', 'else', 'return'],
-    python: ['class', 'def', 'for', 'if', 'else', 'return', 'in', 'range', 'len', 'min'],
-    golang: ['func', 'for', 'if', 'else', 'return', 'range', 'make', 'int', 'string'],
-    javascript: ['var', 'const', 'let', 'function', 'for', 'if', 'else', 'return', 'new'],
+    java: ['class', 'public', 'private', 'protected', 'int', 'String', 'new', 'for', 'if', 'else', 'return', 'void', 'static', 'final'],
+    python: ['class', 'def', 'for', 'if', 'else', 'elif', 'return', 'in', 'range', 'len', 'min', 'max', 'self', 'True', 'False', 'None'],
+    golang: ['func', 'for', 'if', 'else', 'return', 'range', 'make', 'int', 'string', 'var', 'const', 'type', 'struct', 'package', 'import'],
+    javascript: ['var', 'const', 'let', 'function', 'for', 'if', 'else', 'return', 'new', 'this', 'true', 'false', 'null', 'undefined'],
   };
 
-  return lines.map((line, index) => {
-    let highlighted = line;
-    
-    // 高亮注释
-    if (line.includes('//')) {
-      const commentIndex = line.indexOf('//');
-      const before = line.substring(0, commentIndex);
-      const comment = line.substring(commentIndex);
-      highlighted = `${before}<span class="comment">${comment}</span>`;
-    } else if (line.trim().startsWith('#')) {
-      highlighted = `<span class="comment">${line}</span>`;
-    } else {
-      // 高亮关键字
-      keywords[language].forEach(keyword => {
-        const regex = new RegExp(`\\b${keyword}\\b`, 'g');
-        highlighted = highlighted.replace(regex, `<span class="keyword">${keyword}</span>`);
-      });
-      
-      // 高亮字符串
-      highlighted = highlighted.replace(/"[^"]*"/g, match => `<span class="string">${match}</span>`);
-      highlighted = highlighted.replace(/'[^']*'/g, match => `<span class="string">${match}</span>`);
-      
-      // 高亮数字
-      highlighted = highlighted.replace(/\b\d+\b/g, match => `<span class="number">${match}</span>`);
+  const tokenize = (line: string, lang: Language): React.ReactNode[] => {
+    const tokens: React.ReactNode[] = [];
+    let remaining = line;
+    let key = 0;
+
+    while (remaining.length > 0) {
+      // 检查注释
+      const commentMatch = remaining.match(/^(\/\/.*|#.*)/);
+      if (commentMatch) {
+        tokens.push(<span key={key++} className="comment">{commentMatch[0]}</span>);
+        remaining = remaining.slice(commentMatch[0].length);
+        continue;
+      }
+
+      // 检查字符串（双引号）
+      const doubleQuoteMatch = remaining.match(/^"[^"]*"/);
+      if (doubleQuoteMatch) {
+        tokens.push(<span key={key++} className="string">{doubleQuoteMatch[0]}</span>);
+        remaining = remaining.slice(doubleQuoteMatch[0].length);
+        continue;
+      }
+
+      // 检查字符串（单引号）
+      const singleQuoteMatch = remaining.match(/^'[^']*'/);
+      if (singleQuoteMatch) {
+        tokens.push(<span key={key++} className="string">{singleQuoteMatch[0]}</span>);
+        remaining = remaining.slice(singleQuoteMatch[0].length);
+        continue;
+      }
+
+      // 检查关键字
+      const keywordPattern = new RegExp(`^\\b(${keywords[lang].join('|')})\\b`);
+      const keywordMatch = remaining.match(keywordPattern);
+      if (keywordMatch) {
+        tokens.push(<span key={key++} className="keyword">{keywordMatch[0]}</span>);
+        remaining = remaining.slice(keywordMatch[0].length);
+        continue;
+      }
+
+      // 检查数字
+      const numberMatch = remaining.match(/^\b\d+\b/);
+      if (numberMatch) {
+        tokens.push(<span key={key++} className="number">{numberMatch[0]}</span>);
+        remaining = remaining.slice(numberMatch[0].length);
+        continue;
+      }
+
+      // 检查函数调用
+      const funcMatch = remaining.match(/^([a-zA-Z_][a-zA-Z0-9_]*)\s*\(/);
+      if (funcMatch) {
+        tokens.push(<span key={key++} className="function">{funcMatch[1]}</span>);
+        remaining = remaining.slice(funcMatch[1].length);
+        continue;
+      }
+
+      // 普通字符
+      tokens.push(remaining[0]);
+      remaining = remaining.slice(1);
     }
-    
-    return (
-      <span
-        key={index}
-        className="code-line-text"
-        dangerouslySetInnerHTML={{ __html: highlighted || ' ' }}
-      />
-    );
-  });
+
+    return tokens;
+  };
+
+  return lines.map((line, index) => (
+    <span key={index} className="code-line-text">
+      {tokenize(line, language)}
+    </span>
+  ));
 };
 
 const CodePanel: React.FC<Props> = ({ currentStep }) => {

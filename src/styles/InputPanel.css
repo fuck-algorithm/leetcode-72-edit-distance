@@ -1,35 +1,31 @@
 .input-panel {
   background: var(--bg-secondary);
   border-radius: var(--border-radius);
-  padding: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
   box-shadow: var(--shadow-sm);
+  margin: var(--spacing-xs) var(--spacing-sm) 0;
 }
 
-.input-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
-.input-row {
+.input-inline {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
+  flex-wrap: nowrap;
 }
 
 .input-label {
   font-size: 13px;
   font-weight: 500;
   color: var(--text-secondary);
-  min-width: 50px;
+  white-space: nowrap;
 }
 
 .input-field {
-  flex: 1;
-  padding: var(--spacing-xs) var(--spacing-sm);
+  width: 120px;
+  padding: 4px 8px;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  font-size: 14px;
+  font-size: 13px;
   font-family: var(--font-mono);
   transition: var(--transition-fast);
 }
@@ -44,14 +40,8 @@
   border-color: var(--error-color);
 }
 
-.input-actions {
-  display: flex;
-  gap: var(--spacing-xs);
-  margin-top: var(--spacing-xs);
-}
-
 .action-btn {
-  padding: var(--spacing-xs) var(--spacing-sm);
+  padding: 4px 12px;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   background: var(--bg-primary);
@@ -59,6 +49,7 @@
   font-size: 12px;
   cursor: pointer;
   transition: var(--transition-fast);
+  white-space: nowrap;
 }
 
 .action-btn:hover {
@@ -78,22 +69,9 @@
   border-color: var(--primary-dark);
 }
 
-.examples-section {
-  margin-top: var(--spacing-sm);
-  padding-top: var(--spacing-sm);
-  border-top: 1px solid var(--border-color);
-}
-
-.examples-label {
-  font-size: 12px;
-  color: var(--text-secondary);
-  margin-bottom: var(--spacing-xs);
-}
-
-.examples-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-xs);
+.divider {
+  color: var(--border-color);
+  margin: 0 4px;
 }
 
 .example-btn {
@@ -105,6 +83,7 @@
   font-size: 11px;
   cursor: pointer;
   transition: var(--transition-fast);
+  white-space: nowrap;
 }
 
 .example-btn:hover {
@@ -116,5 +95,6 @@
 .error-message {
   color: var(--error-color);
   font-size: 12px;
-  margin-top: var(--spacing-xs);
+  margin-left: 8px;
+  white-space: nowrap;
 }
