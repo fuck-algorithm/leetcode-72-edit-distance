@@ -23,9 +23,50 @@
 .dp-cell {
   stroke: var(--border-color);
   stroke-width: 1;
-  transition: fill 0.3s ease;
+  transition: fill 0.3s ease, stroke 0.3s ease;
 }
 
+/* 单元格状态样式 */
+.dp-cell.cell-state-uninitialized {
+  fill: var(--cell-uninitialized);
+  stroke: var(--cell-border-uninitialized);
+}
+
+.dp-cell.cell-state-initialized {
+  fill: var(--cell-initialized);
+  stroke: var(--cell-border-initialized);
+}
+
+.dp-cell.cell-state-computing {
+  fill: var(--cell-computing);
+  stroke: var(--cell-border-computing);
+  stroke-width: 2;
+}
+
+.dp-cell.cell-state-comparing {
+  fill: var(--cell-comparing);
+  stroke: var(--cell-border-comparing);
+}
+
+.dp-cell.cell-state-selected {
+  fill: var(--cell-selected);
+  stroke: var(--cell-border-selected);
+  stroke-width: 2;
+}
+
+.dp-cell.cell-state-result {
+  fill: var(--cell-result-new);
+  stroke: var(--cell-border-result);
+  stroke-width: 2;
+}
+
+.dp-cell.cell-state-final {
+  fill: var(--cell-final);
+  stroke: var(--cell-border-final);
+  stroke-width: 3;
+}
+
+/* 保持向后兼容的高亮样式 */
 .dp-cell.header {
   fill: var(--cell-header);
 }
@@ -357,19 +398,47 @@
   border: 1px solid var(--border-color);
 }
 
+/* 图例颜色 - 对应单元格状态 */
+.legend-color.uninitialized {
+  background: var(--cell-uninitialized);
+  border-color: var(--cell-border-uninitialized);
+}
+
+.legend-color.initialized {
+  background: var(--cell-initialized);
+  border-color: var(--cell-border-initialized);
+}
+
+.legend-color.computing {
+  background: var(--cell-computing);
+  border-color: var(--cell-border-computing);
+}
+
+.legend-color.comparing {
+  background: var(--cell-comparing);
+  border-color: var(--cell-border-comparing);
+}
+
+.legend-color.selected {
+  background: var(--cell-selected);
+  border-color: var(--cell-border-selected);
+}
+
+.legend-color.result {
+  background: var(--cell-result-new);
+  border-color: var(--cell-border-result);
+}
+
+.legend-color.final {
+  background: var(--cell-final);
+  border-color: var(--cell-border-final);
+}
+
+/* 保持向后兼容 */
 .legend-color.current {
   background: var(--cell-current);
 }
 
 .legend-color.compare {
   background: var(--cell-compare);
-}
-
-.legend-color.selected {
-  background: #FFD54F;
-  border-color: #FF9800;
-}
-
-.legend-color.result {
-  background: var(--cell-result);
 }

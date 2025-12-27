@@ -1,4 +1,14 @@
-import type { AlgorithmStep } from '../types';
+import type { AlgorithmStep, CellState, CellStateMatrix } from '../types';
+
+// 创建初始单元格状态矩阵
+const createCellStateMatrix = (rows: number, cols: number, defaultState: CellState = 'uninitialized'): CellStateMatrix => {
+  return Array(rows).fill(null).map(() => Array(cols).fill(defaultState));
+};
+
+// 深拷贝单元格状态矩阵
+const cloneCellStates = (matrix: CellStateMatrix): CellStateMatrix => {
+  return matrix.map(row => [...row]);
+};
 
 // 生成编辑距离算法的所有步骤
 export const generateEditDistanceSteps = (word1: string, word2: string): AlgorithmStep[] => {
@@ -8,6 +18,11 @@ export const generateEditDistanceSteps = (word1: string, word2: string): Algorit
   
   // 初始化DP表格
   const dp: number[][] = Array(n1 + 1).fill(null).map(() => Array(n2 + 1).fill(0));
+  
+  // 初始化单元格状态矩阵 - 所有单元格初始为未初始化状态
+  const cellStates: CellStateMatrix = createCellStateMatrix(n1 + 1, n2 + 1, 'uninitialized');
+  // dp[0][0] 初始值为0，标记为已初始化
+  cellStates[0][0] = 'initialized';
   
   let stepId = 0;
 
@@ -26,6 +41,7 @@ export const generateEditDistanceSteps = (word1: string, word2: string): Algorit
     i: -1,
     j: -1,
     dpTable: JSON.parse(JSON.stringify(dp)),
+    cellStates: cloneCellStates(cellStates),
     highlightCells: [],
     operation: 'init',
     codeLines: { java: [3, 4], python: [2, 3], golang: [3, 4], javascript: [2, 3] },
@@ -38,6 +54,12 @@ export const generateEditDistanceSteps = (word1: string, word2: string): Algorit
   // 初始化第一行
   for (let j = 1; j <= n2; j++) {
     dp[0][j] = dp[0][j - 1] + 1;
+    
+    // 创建当前步骤的单元格状态
+    const currentCellStates = cloneCellStates(cellStates);
+    currentCellStates[0][j] = 'computing';  // 当前正在计算
+    currentCellStates[0][j - 1] = 'comparing';  // 参与比较的来源
+    
     steps.push({
       id: stepId++,
       description: `📝 初始化第一行 dp[0][${j}] = ${dp[0][j]}`,
@@ -51,6 +73,7 @@ export const generateEditDistanceSteps = (word1: string, word2: string): Algorit
       i: 0,
       j: j,
       dpTable: JSON.parse(JSON.stringify(dp)),
+      cellStates: currentCellStates,
       highlightCells: [
         { row: 0, col: j, type: 'current' },
         { row: 0, col: j - 1, type: 'compare' },
@@ -67,11 +90,20 @@ export const generateEditDistanceSteps = (word1: string, word2: string): Algorit
         label: `+1 插入'${word2[j-1]}'`,
       }],
     });
+    
+    // 更新全局状态：当前单元格计算完成
+    cellStates[0][j] = 'initialized';
   }
 
   // 初始化第一列
   for (let i = 1; i <= n1; i++) {
     dp[i][0] = dp[i - 1][0] + 1;
+    
+    // 创建当前步骤的单元格状态
+    const currentCellStates = cloneCellStates(cellStates);
+    currentCellStates[i][0] = 'computing';  // 当前正在计算
+    currentCellStates[i - 1][0] = 'comparing';  // 参与比较的来源
+    
     steps.push({
       id: stepId++,
       description: `📝 初始化第一列 dp[${i}][0] = ${dp[i][0]}`,
@@ -85,6 +117,7 @@ export const generateEditDistanceSteps = (word1: string, word2: string): Algorit
       i: i,
       j: 0,
       dpTable: JSON.parse(JSON.stringify(dp)),
+      cellStates: currentCellStates,
       highlightCells: [
         { row: i, col: 0, type: 'current' },
         { row: i - 1, col: 0, type: 'compare' },
@@ -101,6 +134,9 @@ export const generateEditDistanceSteps = (word1: string, word2: string): Algorit
         label: `+1 删除'${word1[i-1]}'`,
       }],
     });
+    
+    // 更新全局状态：当前单元格计算完成
+    cellStates[i][0] = 'initialized';
   }
 
   // 填充DP表格
@@ -109,7 +145,13 @@ export const generateEditDistanceSteps = (word1: string, word2: string): Algorit
       const char1 = word1[i - 1];
       const char2 = word2[j - 1];
       
-      // 比较字符步骤
+      // 比较字符步骤 - 创建当前步骤的单元格状态
+      const compareCellStates = cloneCellStates(cellStates);
+      compareCellStates[i][j] = 'computing';  // 当前正在计算
+      compareCellStates[i - 1][j - 1] = 'comparing';  // 左上角参与比较
+      compareCellStates[i - 1][j] = 'comparing';  // 上方参与比较
+      compareCellStates[i][j - 1] = 'comparing';  // 左方参与比较
+      
       steps.push({
         id: stepId++,
         description: `🔍 比较字符: word1[${i - 1}]='${char1}' vs word2[${j - 1}]='${char2}'`,
@@ -126,6 +168,7 @@ ${char1 === char2 ?
         i: i,
         j: j,
         dpTable: JSON.parse(JSON.stringify(dp)),
+        cellStates: compareCellStates,
         highlightCells: [
           { row: i, col: j, type: 'current' },
           { row: i - 1, col: j - 1, type: 'compare' },
@@ -149,6 +192,12 @@ ${char1 === char2 ?
       if (char1 === char2) {
         // 字符相同，不需要操作
         dp[i][j] = dp[i - 1][j - 1];
+        
+        // 创建结果步骤的单元格状态
+        const resultCellStates = cloneCellStates(cellStates);
+        resultCellStates[i][j] = 'result';  // 计算结果
+        resultCellStates[i - 1][j - 1] = 'selected';  // 被选中的来源
+        
         steps.push({
           id: stepId++,
           description: `✅ 字符匹配! '${char1}' == '${char2}'`,
@@ -165,6 +214,7 @@ ${char1 === char2 ?
           i: i,
           j: j,
           dpTable: JSON.parse(JSON.stringify(dp)),
+          cellStates: resultCellStates,
           highlightCells: [
             { row: i, col: j, type: 'result' },
             { row: i - 1, col: j - 1, type: 'compare' },
@@ -228,6 +278,13 @@ ${char1 === char2 ?
           arrowFrom = { row: i, col: j - 1 };
         }
 
+        // 创建结果步骤的单元格状态
+        const resultCellStates = cloneCellStates(cellStates);
+        resultCellStates[i][j] = 'result';  // 计算结果
+        resultCellStates[i - 1][j - 1] = minCost === replaceCost ? 'selected' : 'comparing';
+        resultCellStates[i - 1][j] = minCost === deleteCost ? 'selected' : 'comparing';
+        resultCellStates[i][j - 1] = minCost === insertCost ? 'selected' : 'comparing';
+
         steps.push({
           id: stepId++,
           description: `❌ 字符不同 '${char1}' ≠ '${char2}' → ${operationDesc}`,
@@ -243,6 +300,7 @@ ${whyThisOperation}
           i: i,
           j: j,
           dpTable: JSON.parse(JSON.stringify(dp)),
+          cellStates: resultCellStates,
           highlightCells: [
             { row: i, col: j, type: 'result' },
             { row: i - 1, col: j - 1, type: minCost === replaceCost ? 'selected' : 'compare' },
@@ -269,10 +327,16 @@ ${whyThisOperation}
           },
         });
       }
+      
+      // 更新全局状态：当前单元格计算完成
+      cellStates[i][j] = 'initialized';
     }
   }
 
   // 最终结果
+  const finalCellStates = cloneCellStates(cellStates);
+  finalCellStates[n1][n2] = 'final';  // 最终答案单元格
+  
   steps.push({
     id: stepId++,
     description: `🎉 计算完成!`,
@@ -291,6 +355,7 @@ ${whyThisOperation}
     i: n1,
     j: n2,
     dpTable: JSON.parse(JSON.stringify(dp)),
+    cellStates: finalCellStates,
     highlightCells: [{ row: n1, col: n2, type: 'result' }],
     codeLines: { java: [20], python: [19], golang: [20], javascript: [19] },
     variables: [

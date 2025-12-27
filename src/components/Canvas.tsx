@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import * as d3 from 'd3';
-import type { AlgorithmStep } from '../types';
+import type { AlgorithmStep, CellState } from '../types';
 import '../styles/Canvas.css';
 
 interface Props {
@@ -12,6 +12,11 @@ interface Props {
 const MIN_CELL_SIZE = 40;
 const MAX_CELL_SIZE = 80;
 const PADDING = 60; // 画布边距
+
+// 根据单元格状态获取CSS类名
+const getCellStateClass = (state: CellState): string => {
+  return `cell-state-${state}`;
+};
 
 const Canvas: React.FC<Props> = ({ step, word1, word2 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -166,16 +171,20 @@ const Canvas: React.FC<Props> = ({ step, word1, word2 }) => {
         const x = (j + 1) * cellSize;
         const y = headerSize + i * cellSize;
         
-        // 确定单元格类型
-        let cellType = 'default';
+        // 获取单元格状态
+        const cellState = step.cellStates?.[i]?.[j] || 'uninitialized';
+        const cellStateClass = getCellStateClass(cellState);
+        
+        // 确定高亮类型（用于向后兼容和额外的视觉效果）
+        let highlightType = '';
         const highlight = step.highlightCells.find(h => h.row === i && h.col === j);
         if (highlight) {
-          cellType = highlight.type;
+          highlightType = highlight.type;
         }
 
-        // 绘制单元格背景
+        // 绘制单元格背景 - 使用单元格状态类
         group.append('rect')
-          .attr('class', `dp-cell ${cellType}`)
+          .attr('class', `dp-cell ${cellStateClass} ${highlightType}`)
           .attr('x', x)
           .attr('y', y)
           .attr('width', cellSize)
@@ -184,9 +193,9 @@ const Canvas: React.FC<Props> = ({ step, word1, word2 }) => {
 
         // 绘制单元格值
         const value = dpTable[i]?.[j];
-        if (value !== undefined) {
+        if (value !== undefined && cellState !== 'uninitialized') {
           group.append('text')
-            .attr('class', `dp-cell-text ${cellType}`)
+            .attr('class', `dp-cell-text ${cellStateClass}`)
             .attr('x', x + cellSize / 2)
             .attr('y', y + cellSize / 2)
             .text(value);
@@ -209,7 +218,7 @@ const Canvas: React.FC<Props> = ({ step, word1, word2 }) => {
         }
 
         // 为selected类型的单元格添加选中标记
-        if (highlight && highlight.type === 'selected') {
+        if (cellState === 'selected' || (highlight && highlight.type === 'selected')) {
           group.append('text')
             .attr('class', 'selected-mark')
             .attr('x', x + cellSize - 10)
@@ -434,22 +443,34 @@ const Canvas: React.FC<Props> = ({ step, word1, word2 }) => {
       )}
 
       <div className="legend">
-        <div className="legend-title">图例</div>
+        <div className="legend-title">单元格状态</div>
         <div className="legend-item">
-          <div className="legend-color current" />
-          <span>当前单元格</span>
+          <div className="legend-color uninitialized" />
+          <span>未初始化</span>
         </div>
         <div className="legend-item">
-          <div className="legend-color compare" />
-          <span>比较来源</span>
+          <div className="legend-color initialized" />
+          <span>已初始化</span>
+        </div>
+        <div className="legend-item">
+          <div className="legend-color computing" />
+          <span>正在计算</span>
+        </div>
+        <div className="legend-item">
+          <div className="legend-color comparing" />
+          <span>参与比较</span>
         </div>
         <div className="legend-item">
           <div className="legend-color selected" />
-          <span>选中来源</span>
+          <span>被选中</span>
         </div>
         <div className="legend-item">
           <div className="legend-color result" />
           <span>计算结果</span>
+        </div>
+        <div className="legend-item">
+          <div className="legend-color final" />
+          <span>最终答案</span>
         </div>
       </div>
 

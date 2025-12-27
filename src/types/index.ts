@@ -1,3 +1,19 @@
+// 单元格状态类型
+export type CellState = 
+  | 'uninitialized'  // 未初始化 - 还没有计算过的单元格
+  | 'initialized'    // 已初始化 - 已经计算完成的单元格
+  | 'computing'      // 正在计算 - 当前正在计算的单元格
+  | 'comparing'      // 参与比较 - 作为计算来源被比较的单元格
+  | 'selected'       // 被选中 - 最终被选择作为来源的单元格
+  | 'result'         // 计算结果 - 刚刚计算完成的单元格
+  | 'final';         // 最终答案 - 最终结果单元格
+
+// 单元格状态矩阵类型
+export type CellStateMatrix = CellState[][];
+
+// 高亮单元格类型（保持向后兼容）
+export type HighlightType = 'current' | 'compare' | 'result' | 'selected';
+
 // 算法步骤类型
 export interface AlgorithmStep {
   id: number;
@@ -9,8 +25,10 @@ export interface AlgorithmStep {
   j: number;
   // DP表格状态
   dpTable: number[][];
-  // 高亮的单元格
-  highlightCells: { row: number; col: number; type: 'current' | 'compare' | 'result' | 'selected' }[];
+  // 单元格状态矩阵 - 每个单元格的状态
+  cellStates: CellStateMatrix;
+  // 高亮的单元格（保持向后兼容）
+  highlightCells: { row: number; col: number; type: HighlightType }[];
   // 操作类型
   operation?: 'insert' | 'delete' | 'replace' | 'match' | 'init';
   // 代码行号映射

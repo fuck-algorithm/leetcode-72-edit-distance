@@ -31,6 +31,24 @@
   --cell-result: #A5D6A7;
   --cell-header: #E3F2FD;
   
+  /* 单元格状态颜色 */
+  --cell-uninitialized: #f5f5f5;      /* 未初始化 - 浅灰色 */
+  --cell-initialized: #ffffff;         /* 已初始化 - 白色 */
+  --cell-computing: #FFE082;           /* 正在计算 - 黄色 */
+  --cell-comparing: #B3E5FC;           /* 参与比较 - 浅蓝色 */
+  --cell-selected: #FFD54F;            /* 被选中 - 金黄色 */
+  --cell-result-new: #A5D6A7;          /* 计算结果 - 浅绿色 */
+  --cell-final: #81C784;               /* 最终答案 - 绿色 */
+  
+  /* 单元格状态边框颜色 */
+  --cell-border-uninitialized: #e0e0e0;
+  --cell-border-initialized: #bdbdbd;
+  --cell-border-computing: #FFA000;
+  --cell-border-comparing: #03A9F4;
+  --cell-border-selected: #FF9800;
+  --cell-border-result: #4CAF50;
+  --cell-border-final: #388E3C;
+  
   /* 操作颜色 */
   --op-insert: #81C784;
   --op-delete: #E57373;
