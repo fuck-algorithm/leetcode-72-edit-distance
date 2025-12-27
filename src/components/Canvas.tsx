@@ -64,13 +64,16 @@ const Canvas: React.FC<Props> = ({ step, word1, word2 }) => {
   const tableWidth = (word2.length + 2) * cellSize;
   const tableHeight = (word1.length + 2) * cellSize;
 
-  // 居中表格
+  // 居中表格（仅在word1/word2/cellSize变化时重新居中，不依赖scale避免循环）
   useEffect(() => {
     if (svgRef.current) {
       const rect = svgRef.current.getBoundingClientRect();
-      const centerX = (rect.width - tableWidth * transform.scale) / 2;
-      const centerY = (rect.height - tableHeight * transform.scale) / 2;
-      setTransform(prev => ({ ...prev, x: centerX, y: centerY }));
+      // 使用当前scale值进行计算，但不将其作为依赖项
+      setTransform(prev => {
+        const centerX = (rect.width - tableWidth * prev.scale) / 2;
+        const centerY = (rect.height - tableHeight * prev.scale) / 2;
+        return { ...prev, x: centerX, y: centerY };
+      });
     }
   }, [word1, word2, tableWidth, tableHeight, cellSize]);
 
